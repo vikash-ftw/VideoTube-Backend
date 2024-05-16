@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "a backend code to build youtube like clone",
   "type": "module",
-  "main": "index.js",
+  "main": "./src/index.js",
   "scripts": {
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon -r dotenv/config src/index.js"
   },
   "keywords": [
     "node",
@@ -17,5 +17,10 @@
   "devDependencies": {
     "nodemon": "^3.1.0",
     "prettier": "^3.2.5"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.3.5"
   }
 }
