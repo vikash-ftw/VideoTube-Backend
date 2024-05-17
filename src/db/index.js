@@ -22,7 +22,7 @@ const connectDB = async () => {
 // mongoose.connect return a promise - so we do not need to create a promise
 // we just use .then and .catch to handle the response
 // create a function - inside it handle the promise and then export the function
-const connectDB = () => {
+const connectDB = async () => {
   mongoose
     .connect(`${process.env.MONGODB_URL}/${DB_NAME}`) // .connect() returns promise
     .then((connectionInstance) => {
