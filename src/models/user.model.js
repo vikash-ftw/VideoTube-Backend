@@ -63,7 +63,7 @@ userSchema.pre("save", async function (next) {
   }
   // hash() takes two args - 1. data to be encrypted?
   // 2. then num of rounds or salt to use for encryption
-  this.password = bcrypt.hash(this.password, 10);
+  this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 
