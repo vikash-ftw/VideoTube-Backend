@@ -10,6 +10,7 @@ const app = express();
 app.use(
   cors({
     origin: process.env.CORS_ORIGIN, // to manage req origin source ex- origin: 'http://example.com'
+    credentials: true, // allow cookies on cross-origin requests
   })
 );
 

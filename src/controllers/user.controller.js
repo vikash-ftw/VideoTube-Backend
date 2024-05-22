@@ -160,8 +160,8 @@ const loginUser = asyncHandler(async (req, res) => {
   );
   // options to enable secure cookie - only server can modify cookies
   const options = {
-    HttpOnly: true,
-    Secure: true,
+    httpOnly: true,
+    secure: true,
   };
 
   // setting secure cookies for tokens with options
@@ -192,8 +192,8 @@ const logoutUser = asyncHandler(async (req, res) => {
   );
 
   const options = {
-    HttpOnly: true,
-    Secure: true,
+    httpOnly: true,
+    secure: true,
   };
 
   res
@@ -236,8 +236,8 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
     // generate response and save new tokens in cookies
     const options = {
-      HttpOnly: true,
-      Secure: true,
+      httpOnly: true,
+      secure: true,
     };
 
     return res
