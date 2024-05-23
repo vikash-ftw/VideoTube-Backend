@@ -183,10 +183,11 @@ const loginUser = asyncHandler(async (req, res) => {
 // logout
 const logoutUser = asyncHandler(async (req, res) => {
   // added user attr in req object by middleware
+  // remove the refresh token from user document in DB
   await User.findByIdAndUpdate(
     req.user._id,
     {
-      $set: { refreshToken: undefined },
+      $unset: { refreshToken: 1 }, // this removes the field from document
     },
     {
       new: true,
@@ -233,7 +234,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     }
 
     // regenerate new accessToken and refreshToken
-    const { newAccessToken, newRefreshToken } =
+    const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
       await generateAccessAndRefreshTokens(user._id);
 
     // generate response and save new tokens in cookies
