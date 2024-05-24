@@ -41,11 +41,15 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "fullName is required")
   }
   */
-  // best practices
+  // field present and not empty validation
+  if (!(fullName && email && username && password)) {
+    throw new ApiError(400, "All fields are required!");
+  }
+  // best practices for empty space in values
   if (
     [fullName, email, username, password].some((field) => field?.trim() === "")
   ) {
-    throw new ApiError(400, "All fields are required!");
+    throw new ApiError(400, "Some fields have empty space in value!");
   }
   // 3. check if user exists
   // checking on both email or username
