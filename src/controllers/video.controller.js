@@ -53,10 +53,6 @@ const publishAVideo = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Thumbnail file upload failed!");
   }
 
-  // validating user ObjectId
-  if (!isValidObjectId(new mongoose.Types.ObjectId(req?.user?._id))) {
-    throw new ApiError(500, "Can not fetch Owner Id!");
-  }
   // creating video document object
   const video = await Video.create({
     title,
