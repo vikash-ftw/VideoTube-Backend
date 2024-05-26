@@ -35,13 +35,12 @@ app.use(express.static("public")); // here public is the folder name
 // configure the cookie handling
 app.use(cookieParser());
 
-// import user routes
+// import routes
 import userRouter from "./routes/user.routes.js";
+import videoRouter from "./routes/video.routes.js";
+
 // user routes
 app.use("/api/v1/users", userRouter);
-
-// import video routes
-import videoRouter from "./routes/video.routes.js";
 // video routes
 app.use("/api/v1/videos", videoRouter);
 
