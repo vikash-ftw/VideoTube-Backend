@@ -77,8 +77,8 @@ const publishAVideo = asyncHandler(async (req, res) => {
 const getVideoById = asyncHandler(async (req, res) => {
   // fetch id from url path
   const { videoId } = req.params;
-  if (!videoId) {
-    throw new ApiError(400, "Video Id is required!");
+  if (!(videoId && isValidObjectId(videoId))) {
+    throw new ApiError(400, "Valid videoId is required!");
   }
   // find the video by id
   const video = await Video.findById(videoId);
@@ -95,8 +95,8 @@ const getVideoById = asyncHandler(async (req, res) => {
 const updateVideo = asyncHandler(async (req, res) => {
   // fetch videoId from params
   const { videoId } = req.params;
-  if (!videoId) {
-    throw new ApiError(400, "Video Id is required!");
+  if (!(videoId && isValidObjectId(videoId))) {
+    throw new ApiError(400, "Valid videoId is required!");
   }
 
   // get video
@@ -150,8 +150,8 @@ const updateVideo = asyncHandler(async (req, res) => {
 // delete a video by Id
 const deleteVideoById = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
-  if (!videoId) {
-    throw new ApiError(400, "Video Id is required!");
+  if (!(videoId && isValidObjectId(videoId))) {
+    throw new ApiError(400, "Valid videoId is required!");
   }
   // get video
   const video = await Video.findById(videoId);
@@ -179,8 +179,8 @@ const deleteVideoById = asyncHandler(async (req, res) => {
 // toggle publish status
 const togglePublishStatus = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
-  if (!videoId) {
-    throw new ApiError(400, "Video Id is required!");
+  if (!(videoId && isValidObjectId(videoId))) {
+    throw new ApiError(400, "Valid videoId is required!");
   }
   // get video
   const video = await Video.findById(videoId);
