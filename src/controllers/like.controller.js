@@ -112,10 +112,18 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
 
 // controller to fetch all liked videos of loggedIn user
 const getLikedVideos = asyncHandler(async (req, res) => {
-  const likedVideosList = await Like.find({
-    likedBy: req.user,
-    video: { $exists: true },
-  });
+  let likedVideosList;
+  try {
+    likedVideosList = await Like.find({
+      likedBy: req.user,
+      video: { $exists: true },
+    });
+  } catch (error) {
+    throw new ApiError(
+      500,
+      "Server Error: Something went wrong while querying liked Videos!"
+    );
+  }
   res
     .status(200)
     .json(
