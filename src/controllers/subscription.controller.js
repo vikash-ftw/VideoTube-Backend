@@ -21,7 +21,7 @@ const toggleSubscription = asyncHandler(async (req, res) => {
   } catch (error) {
     throw new ApiError(
       500,
-      "Server Error: Something went wrong while querying subscription details!"
+      "Server Error: Something went wrong while toggling subscription!"
     );
   }
   if (!deleteSubscriptionIfExist) {
@@ -29,15 +29,6 @@ const toggleSubscription = asyncHandler(async (req, res) => {
       subscriber: req.user,
       channel: channelId,
     });
-    res
-      .status(200)
-      .json(
-        new ApiResponse(
-          200,
-          { subscriberId: req.user._id, channelId: channelId },
-          "User has successfully Subscribed to given channel"
-        )
-      );
   }
   res
     .status(200)
@@ -45,7 +36,7 @@ const toggleSubscription = asyncHandler(async (req, res) => {
       new ApiResponse(
         200,
         { subscriberId: req.user._id, channelId: channelId },
-        "User has Unsubscribed to given channel"
+        `User has ${deleteSubscriptionIfExist ? "Unsubscribed" : "Subscribed"} to given channel`
       )
     );
 });
