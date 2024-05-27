@@ -39,6 +39,7 @@ app.use(cookieParser());
 import userRouter from "./routes/user.routes.js";
 import videoRouter from "./routes/video.routes.js";
 import subscriptionRouter from "./routes/subscription.routes.js";
+import likeRouter from "./routes/like.routes.js";
 
 // user routes
 app.use("/api/v1/users", userRouter);
@@ -46,5 +47,7 @@ app.use("/api/v1/users", userRouter);
 app.use("/api/v1/videos", videoRouter);
 // subscription based routes
 app.use("/api/v1/subscriptions", subscriptionRouter);
+// like based routes
+app.use("/api/v1/likes", likeRouter);
 
 export { app };
