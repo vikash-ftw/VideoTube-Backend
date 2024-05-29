@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { ApiError } from "./utils/ApiError.js";
 
 const app = express();
 
@@ -55,5 +56,16 @@ app.use("/api/v1/likes", likeRouter);
 app.use("/api/v1/comments", commentRouter);
 // tweet based routes
 app.use("/api/v1/tweets", tweetRouter);
+
+// middleware to send error in better format
+app.use(async (err, req, res, next) => {
+  if (err instanceof ApiError) {
+    res
+      .status(err.statusCode)
+      .json({ statusCode: err.statusCode, message: err.message });
+  } else {
+    res.status(500).json({ statusCode: 500, message: err?.message });
+  }
+});
 
 export { app };
