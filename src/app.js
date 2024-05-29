@@ -43,6 +43,7 @@ import subscriptionRouter from "./routes/subscription.routes.js";
 import likeRouter from "./routes/like.routes.js";
 import commentRouter from "./routes/comment.routes.js";
 import tweetRouter from "./routes/tweet.routes.js";
+import playlistRouter from "./routes/playlist.routes.js";
 
 // user routes
 app.use("/api/v1/users", userRouter);
@@ -56,6 +57,8 @@ app.use("/api/v1/likes", likeRouter);
 app.use("/api/v1/comments", commentRouter);
 // tweet based routes
 app.use("/api/v1/tweets", tweetRouter);
+// playlist based routes
+app.use("/api/v1/playlist", playlistRouter);
 
 // middleware to send error in better format
 app.use(async (err, req, res, next) => {

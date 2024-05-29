@@ -11,7 +11,7 @@ const createPlaylist = asyncHandler(async (req, res) => {
     throw new ApiError(400, "All fields are required!");
   }
   if ([name, description].some((field) => field?.trim() === "")) {
-    throw new ApiError(400, "Empty fields!");
+    throw new ApiError(400, "Some fields have empty spaces in value!");
   }
 
   const playlist = await Playlist.create({
@@ -122,7 +122,7 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
     playlistId,
     {
       $pullAll: {
-        videos: videoId,
+        videos: [{ _id: videoId }], // delete all elements with matching id
       },
     },
     { new: true }
@@ -146,10 +146,77 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
     );
 });
 
+// controller to delete a playlist
+const deletePlaylist = asyncHandler(async (req, res) => {
+  const { playlistId } = req.params;
+  if (!(playlistId && isValidObjectId(playlistId))) {
+    throw new ApiError(400, "Valid playlistId is required!");
+  }
+
+  const deletedPlaylist = await Playlist.findByIdAndDelete(playlistId);
+  if (!deletedPlaylist) {
+    throw new ApiError(
+      500,
+      "Server Error: Something went wrong while deleting playlist!"
+    );
+  }
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(200, deletedPlaylist, "Successfully deleted playlist")
+    );
+});
+
+// controller to update playlist name & description
+const updatePlaylistInfo = asyncHandler(async (req, res) => {
+  const { playlistId } = req.params;
+  if (!(playlistId && isValidObjectId(playlistId))) {
+    throw new ApiError(400, "Valid playlistId is required!");
+  }
+  const { name, description } = req.body;
+  if (!(name && description)) {
+    throw new ApiError(400, "All fields are required!");
+  }
+
+  if ([name, description].some((field) => field?.trim() === "")) {
+    throw new ApiError(400, "Some fields have empty space in value!");
+  }
+
+  const updatedPlaylist = await Playlist.findByIdAndUpdate(
+    playlistId,
+    {
+      $set: {
+        name,
+        description,
+      },
+    },
+    { new: true }
+  );
+
+  if (!updatedPlaylist) {
+    throw new ApiError(
+      500,
+      "Server Error: Something went wrong while updating playlist info!"
+    );
+  }
+  res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        updatedPlaylist,
+        "Successfully updated the playlist info"
+      )
+    );
+});
+
 export {
   createPlaylist,
   getUserPlaylists,
   getPlaylistById,
   addVideoToPlaylist,
   removeVideoFromPlaylist,
+  deletePlaylist,
+  updatePlaylistInfo,
 };
