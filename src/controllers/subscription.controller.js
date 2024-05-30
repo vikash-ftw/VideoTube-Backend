@@ -48,9 +48,7 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Valid channelId is required!");
   }
 
-  const subscriberList = (await Subscription.find({ channel: channelId })).map(
-    (subDoc) => subDoc.subscriber
-  );
+  const subscriberList = await Subscription.find({ channel: channelId });
   res
     .status(200)
     .json(
@@ -69,9 +67,7 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Valid subscriberId is required!");
   }
 
-  const channelList = (
-    await Subscription.find({ subscriber: subscriberId })
-  ).map((subDoc) => subDoc.channel);
+  const channelList = await Subscription.find({ subscriber: subscriberId });
 
   res
     .status(200)

@@ -57,10 +57,7 @@ const updateTweet = asyncHandler(async (req, res) => {
   );
 
   if (!updatedTweet) {
-    throw new ApiError(
-      500,
-      "Server Error: Something went wrong while updating tweet!"
-    );
+    throw new ApiError(400, "No tweet found with given Id!");
   }
 
   res
@@ -77,7 +74,7 @@ const deleteTweet = asyncHandler(async (req, res) => {
 
   const deletedTweet = await Tweet.findByIdAndDelete(tweetId);
   if (!deletedTweet) {
-    throw new ApiError(400, "tweet not found!");
+    throw new ApiError(400, "No tweet found with given Id!");
   }
   res
     .status(200)

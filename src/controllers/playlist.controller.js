@@ -62,7 +62,7 @@ const getPlaylistById = asyncHandler(async (req, res) => {
 
   const playlist = await Playlist.findById(playlistId);
   if (!playlist) {
-    throw new ApiError(400, "No Playlist found!");
+    throw new ApiError(400, "No Playlist found with given playlistId!");
   }
   res
     .status(200)
@@ -90,10 +90,7 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
   );
 
   if (!updatedPlaylist) {
-    throw new ApiError(
-      500,
-      "Server Error: Something went wrong when adding video to playlist!"
-    );
+    throw new ApiError(400, "No Playlist found with given id!");
   }
 
   res
@@ -129,10 +126,7 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
   );
 
   if (!updatedPlaylist) {
-    throw new ApiError(
-      500,
-      "Server Error: Something went wrong while removing video from playlist!"
-    );
+    throw new ApiError(400, "No Playlist found with given playlistId!");
   }
 
   res
@@ -155,10 +149,7 @@ const deletePlaylist = asyncHandler(async (req, res) => {
 
   const deletedPlaylist = await Playlist.findByIdAndDelete(playlistId);
   if (!deletedPlaylist) {
-    throw new ApiError(
-      500,
-      "Server Error: Something went wrong while deleting playlist!"
-    );
+    throw new ApiError(400, "No Playlist found with given playlistId!");
   }
 
   res
@@ -195,10 +186,7 @@ const updatePlaylistInfo = asyncHandler(async (req, res) => {
   );
 
   if (!updatedPlaylist) {
-    throw new ApiError(
-      500,
-      "Server Error: Something went wrong while updating playlist info!"
-    );
+    throw new ApiError(400, "No Playlist found with given playlistId!");
   }
   res
     .status(200)

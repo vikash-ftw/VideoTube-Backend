@@ -173,7 +173,9 @@ const deleteVideoById = asyncHandler(async (req, res) => {
   }
 
   // prepare response
-  res.status(200).json(new ApiResponse(200, {}, "video deleted successfully"));
+  res
+    .status(200)
+    .json(new ApiResponse(200, { deletedVideo }, "video deleted successfully"));
 });
 
 // toggle publish status
@@ -189,7 +191,7 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
   }
   // authorize current loggedIn user and video owner are same
   if (video.owner.equals(req.user)) {
-    throw new ApiError(401, "Unauthorized to update video details!");
+    throw new ApiError(401, "Unauthorized to toggle video publish status!");
   }
 
   // store current status
@@ -201,7 +203,7 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
   } catch (error) {
     throw new ApiError(
       500,
-      "Server Error: Something went wrong while updating video details!"
+      "Server Error: Something went wrong while toggling video publish status!"
     );
   }
 

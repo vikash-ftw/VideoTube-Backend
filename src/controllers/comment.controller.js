@@ -40,7 +40,7 @@ const addComment = asyncHandler(async (req, res) => {
 const updateComment = asyncHandler(async (req, res) => {
   const { commentId } = req.params;
   if (!(commentId && isValidObjectId(commentId))) {
-    throw new ApiError(400, "Valid commentId is required");
+    throw new ApiError(400, "Valid commentId is required!");
   }
 
   const { content } = req.body;
@@ -59,10 +59,7 @@ const updateComment = asyncHandler(async (req, res) => {
     { new: true }
   );
   if (!comment) {
-    throw new ApiError(
-      500,
-      "Server Error: Something went wrong while updating comment!"
-    );
+    throw new ApiError(400, "No comment found with given commentId!");
   }
   res
     .status(200)
@@ -78,7 +75,7 @@ const deleteComment = asyncHandler(async (req, res) => {
 
   const deletedComment = await Comment.findByIdAndDelete(commentId);
   if (!deletedComment) {
-    throw new ApiError(400, "Comment not found!");
+    throw new ApiError(400, "No comment found with given commentId!");
   }
   res
     .status(200)
