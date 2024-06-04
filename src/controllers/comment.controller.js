@@ -3,6 +3,7 @@ import { Comment } from "../models/comment.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { Video } from "../models/video.model.js";
 
 // controller to add comment on video
 const addComment = asyncHandler(async (req, res) => {
@@ -82,4 +83,57 @@ const deleteComment = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, deletedComment, "Comment deleted successfully"));
 });
 
-export { addComment, updateComment, deleteComment };
+// controller to fetch all video comments in pagination
+const getVideoComments = asyncHandler(async (req, res) => {
+  const { videoId } = req.params;
+  const { page = 1, limit = 10, sortBy, sortType } = req.query;
+
+  if (!(videoId && isValidObjectId(videoId))) {
+    throw new ApiError(400, "Valid videoId is required!");
+  }
+
+  const video = await Video.findById(videoId);
+  if (!video) {
+    throw new ApiError(400, "No video found with given videoId!");
+  }
+
+  // Preparing query object
+  const queryObj = { video: video._id };
+
+  // Preparing sort object
+  let sortObj = {};
+  // if supplied
+  if (sortBy && sortType) {
+    sortObj[sortBy] = sortType === "desc" ? -1 : 1;
+  } else {
+    // otherwise default sort
+    sortObj["createdAt"] = -1;
+  }
+
+  // Create the aggregation Pipeline
+  const pipeline = [{ $match: queryObj }, { $sort: sortObj }];
+
+  // Paginate with mongoose-paginate-v2
+  const options = {
+    page: parseInt(page),
+    limit: parseInt(limit),
+  };
+
+  console.log("queryObj: ", queryObj);
+  console.log("sortObj: ", sortObj);
+  try {
+    const result = await Comment.aggregatePaginate(
+      Comment.aggregate(pipeline),
+      options
+    );
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+    throw new ApiError(
+      500,
+      "Server Error: Something went wrong while fetching all video's comments in pagination!"
+    );
+  }
+});
+
+export { addComment, updateComment, deleteComment, getVideoComments };
