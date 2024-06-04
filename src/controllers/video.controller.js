@@ -270,7 +270,9 @@ const getAllVideos = asyncHandler(async (req, res) => {
       Video.aggregate(pipeline),
       options
     );
-    res.status(200).json(result);
+    res
+      .status(200)
+      .json(new ApiResponse(200, result, "All Videos fetched Successfully"));
   } catch (error) {
     console.log(error);
     throw new ApiError(

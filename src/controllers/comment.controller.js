@@ -126,7 +126,11 @@ const getVideoComments = asyncHandler(async (req, res) => {
       Comment.aggregate(pipeline),
       options
     );
-    res.status(200).json(result);
+    res
+      .status(200)
+      .json(
+        new ApiResponse(200, result, "Video's Comments fetched Successfully")
+      );
   } catch (error) {
     console.log(error);
     throw new ApiError(
