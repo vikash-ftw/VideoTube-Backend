@@ -219,10 +219,68 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
     );
 });
 
+// fetch all videos via pagination based on query, sort, limit, offset
+const getAllVideos = asyncHandler(async (req, res) => {
+  const { page = 1, limit = 2, query, sortBy, sortType, userId } = req.query;
+
+  // validating the userId field
+  if (!(userId && isValidObjectId(userId))) {
+    throw new ApiError(400, "Valid userId is required!");
+  }
+
+  // fetching user from userId
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError(400, "No user found with given userId!");
+  }
+
+  // Preparing the query object
+  let queryObj = {};
+  if (query) {
+    // Assuming query is a JSON string, parse it into an object
+    queryObj = JSON.parse(query);
+  }
+  if (user) {
+    queryObj.owner = user._id;
+  }
+
+  // Create a sort object
+  let sortObj = {};
+  if (sortBy && sortType) {
+    sortObj[sortBy] = sortType === "desc" ? -1 : 1;
+  }
+
+  // Create the aggregation pipeline
+  const pipeline = [{ $match: queryObj }, { $sort: sortObj }];
+
+  // Paginate with mongoose-paginate-v2
+  const options = {
+    page: parseInt(page),
+    limit: parseInt(limit),
+  };
+
+  console.log("query: ", queryObj);
+  console.log("sort: ", sortObj);
+  try {
+    const result = await Video.aggregatePaginate(
+      Video.aggregate(pipeline),
+      options
+    );
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+    throw new ApiError(
+      500,
+      "Server Error: Something went wrong while fetching all videos in pagination!"
+    );
+  }
+});
+
 export {
   publishAVideo,
   getVideoById,
   updateVideo,
   deleteVideoById,
   togglePublishStatus,
+  getAllVideos,
 };
