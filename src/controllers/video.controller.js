@@ -244,10 +244,14 @@ const getAllVideos = asyncHandler(async (req, res) => {
     queryObj.owner = user._id;
   }
 
-  // Create a sort object
+  // Preparing sort object
   let sortObj = {};
+  // if supplied
   if (sortBy && sortType) {
     sortObj[sortBy] = sortType === "desc" ? -1 : 1;
+  } else {
+    // otherwise default sort
+    sortObj["createdAt"] = -1;
   }
 
   // Create the aggregation pipeline
@@ -259,8 +263,8 @@ const getAllVideos = asyncHandler(async (req, res) => {
     limit: parseInt(limit),
   };
 
-  console.log("query: ", queryObj);
-  console.log("sort: ", sortObj);
+  console.log("queryObj: ", queryObj);
+  console.log("sortObj: ", sortObj);
   try {
     const result = await Video.aggregatePaginate(
       Video.aggregate(pipeline),
