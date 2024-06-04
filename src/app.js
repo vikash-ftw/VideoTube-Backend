@@ -45,6 +45,7 @@ import commentRouter from "./routes/comment.routes.js";
 import tweetRouter from "./routes/tweet.routes.js";
 import playlistRouter from "./routes/playlist.routes.js";
 import healthcheckRouter from "./routes/healthcheck.routes.js";
+import dashboardRouter from "./routes/dashboard.routes.js";
 
 // user routes
 app.use("/api/v1/users", userRouter);
@@ -62,6 +63,8 @@ app.use("/api/v1/tweets", tweetRouter);
 app.use("/api/v1/playlist", playlistRouter);
 // healthcheck route
 app.use("/api/v1/healthcheck", healthcheckRouter);
+// dashboard route
+app.use("/api/v1/dashboard", dashboardRouter);
 
 // middleware to send error in better format
 app.use(async (err, req, res, next) => {
