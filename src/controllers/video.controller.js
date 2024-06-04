@@ -221,7 +221,7 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
 
 // fetch all videos via pagination based on query, sort, limit, offset
 const getAllVideos = asyncHandler(async (req, res) => {
-  const { page = 1, limit = 2, query, sortBy, sortType, userId } = req.query;
+  const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query;
 
   // validating the userId field
   if (!(userId && isValidObjectId(userId))) {
