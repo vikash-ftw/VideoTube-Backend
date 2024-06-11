@@ -282,6 +282,44 @@ const getAllVideos = asyncHandler(async (req, res) => {
   }
 });
 
+// view a video by videoId
+const viewVideoById = asyncHandler(async (req, res) => {
+  const { videoId } = req.params;
+  if (!(videoId && isValidObjectId(videoId))) {
+    throw new ApiError(400, "Valid videoId is required!");
+  }
+
+  // fetch video and update view counter
+  const video = await Video.findByIdAndUpdate(videoId, {
+    $inc: {
+      views: 1,
+    },
+  });
+  if (!video) {
+    throw new ApiError(404, "video not found with given videoId!");
+  }
+
+  // now add this video to user's watchHistory
+  try {
+    const user = await User.findByIdAndUpdate(req?.user._id, {
+      $push: {
+        watchHistory: video,
+      },
+    });
+  } catch (error) {
+    throw new ApiError(
+      500,
+      "Server Error: Something went wrong while updating user's watchHistory!"
+    );
+  }
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(200, video, "Successfully updated views related records")
+    );
+});
+
 export {
   publishAVideo,
   getVideoById,
@@ -289,4 +327,5 @@ export {
   deleteVideoById,
   togglePublishStatus,
   getAllVideos,
+  viewVideoById,
 };
